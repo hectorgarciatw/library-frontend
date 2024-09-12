@@ -31,7 +31,6 @@ const NewBook = (props) => {
 
     const submit = async (event) => {
         event.preventDefault();
-
         try {
             await addBook({
                 variables: {
