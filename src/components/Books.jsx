@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { gql, useQuery } from "@apollo/client";
 
 const ALL_BOOKS = gql`
@@ -8,11 +9,13 @@ const ALL_BOOKS = gql`
                 name
             }
             published
+            genres
         }
     }
 `;
 
 const Books = ({ show }) => {
+    const [genre, setGenre] = useState(null); // Estado para el género seleccionado
     const { loading, error, data } = useQuery(ALL_BOOKS);
 
     if (!show) {
@@ -21,6 +24,12 @@ const Books = ({ show }) => {
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;
+
+    const genres = ["programming", "design", "crime", "classics"]; // Lista de géneros
+    const books = data.allBooks;
+
+    // Filtrar libros en función del género seleccionado
+    const filteredBooks = genre ? books.filter((book) => book.genres.includes(genre)) : books;
 
     return (
         <div>
@@ -34,7 +43,7 @@ const Books = ({ show }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.allBooks.map((book) => (
+                    {filteredBooks.map((book) => (
                         <tr key={book.title}>
                             <td>{book.title}</td>
                             <td>{book.author.name}</td>
@@ -43,6 +52,14 @@ const Books = ({ show }) => {
                     ))}
                 </tbody>
             </table>
+            <div>
+                {genres.map((g) => (
+                    <button key={g} onClick={() => setGenre(g)}>
+                        {g.charAt(0).toUpperCase() + g.slice(1)}
+                    </button>
+                ))}
+                <button onClick={() => setGenre(null)}>All Genres</button>
+            </div>
         </div>
     );
 };
