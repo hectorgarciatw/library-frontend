@@ -15,8 +15,7 @@ const LoginForm = ({ onLogin }) => {
     const [login] = useMutation(LOGIN, {
         onCompleted: (data) => {
             const token = data.login.value;
-            // Puedes decodificar el token para obtener información del usuario si es necesario
-            const userData = { username, token }; // Esto es solo un ejemplo
+            const userData = { username, token };
             onLogin(userData);
         },
         onError: (error) => {
