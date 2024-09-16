@@ -7,7 +7,7 @@ const App = () => {
     const [page, setPage] = useState("authors");
 
     const handleBookAdded = () => {
-        setPage("books"); // Cambia a la vista de libros automáticamente
+        setPage("books");
     };
 
     return (

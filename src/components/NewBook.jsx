@@ -5,7 +5,9 @@ const ADD_BOOK = gql`
     mutation addBook($title: String!, $author: String!, $published: Int!, $genres: [String!]!) {
         addBook(title: $title, author: $author, published: $published, genres: $genres) {
             title
-            author
+            author {
+                name
+            }
             published
             genres
         }
@@ -21,7 +23,10 @@ const NewBook = (props) => {
 
     const [addBook] = useMutation(ADD_BOOK, {
         onCompleted: () => {
-            props.onBookAdded(); // Llama una función en el padre para actualizar la vista
+            props.onBookAdded();
+        },
+        onError: (error) => {
+            console.error("Error adding book:", error.message);
         },
     });
 
@@ -36,49 +41,53 @@ const NewBook = (props) => {
                 variables: {
                     title,
                     author,
-                    published: parseInt(published),
+                    published: parseInt(published, 10),
                     genres,
                 },
             });
 
+            // Cleaning fields
             setTitle("");
             setPublished("");
             setAuthor("");
             setGenres([]);
             setGenre("");
         } catch (error) {
-            console.error("Error adding book:", error);
+            console.error("Error adding book:", error.message);
         }
     };
 
     const addGenre = () => {
-        setGenres(genres.concat(genre));
-        setGenre("");
+        if (genre && !genres.includes(genre)) {
+            setGenres(genres.concat(genre));
+            setGenre("");
+        }
     };
 
     return (
         <div>
             <form onSubmit={submit}>
                 <div>
-                    title
+                    <label>Title</label>
                     <input value={title} onChange={({ target }) => setTitle(target.value)} />
                 </div>
                 <div>
-                    author
+                    <label>Author</label>
                     <input value={author} onChange={({ target }) => setAuthor(target.value)} />
                 </div>
                 <div>
-                    published
+                    <label>Published</label>
                     <input type="number" value={published} onChange={({ target }) => setPublished(target.value)} />
                 </div>
                 <div>
+                    <label>Genre</label>
                     <input value={genre} onChange={({ target }) => setGenre(target.value)} />
                     <button onClick={addGenre} type="button">
-                        add genre
+                        Add Genre
                     </button>
                 </div>
-                <div>genres: {genres.join(" ")}</div>
-                <button type="submit">create book</button>
+                <div>Genres: {genres.join(", ")}</div>
+                <button type="submit">Create Book</button>
             </form>
         </div>
     );
