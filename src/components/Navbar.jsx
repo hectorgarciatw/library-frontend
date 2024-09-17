@@ -8,6 +8,7 @@ const Navbar = ({ setPage, user, onLogout }) => {
             {user ? (
                 <>
                     <button onClick={() => setPage("add")}>Add Book</button>
+                    <button onClick={() => setPage("recommend")}>Recommend</button>
                     <button onClick={onLogout}>Logout</button>
                 </>
             ) : (

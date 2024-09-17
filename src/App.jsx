@@ -5,13 +5,14 @@ import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import LoginForm from "./components/LoginForm";
+import Recommend from "./components/Recommend";
 
 const App = () => {
     const [page, setPage] = useState("authors");
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        // Aquí puedes cargar el estado del usuario desde localStorage o un API
+        // Loading user data in the localStorage
         const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
         setUser(loggedUser);
     }, []);
@@ -38,6 +39,7 @@ const App = () => {
             ) : user ? (
                 <>
                     <NewBook show={page === "add"} onBookAdded={handleBookAdded} />
+                    <Recommend show={page === "recommend"} />
                 </>
             ) : null}
             <>
